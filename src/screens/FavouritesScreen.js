@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import ThreeDotSvg from '../svg/ThreeDotSvg';
 import AddToCartSvg from '../svg/AddToCartSvg';
@@ -13,11 +13,16 @@ const { width } = Dimensions.get('window');
 
 export default function FavoritesScreen() {
   const favorites = useSelector((state) => state.favorites.items);
+  const cartItems = useSelector((state) => state.cart.items); // <-- access cart items
+
   const favoriteItems = Object.values(favorites);
   const dispatch = useDispatch();
-
   const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
+    if (cartItems[item.id]) {
+      Alert.alert('Already in Cart', 'This product is already in your cart.');
+    } else {
+      dispatch(addToCart(item));
+    }
   };
 
   if (favoriteItems.length === 0) {

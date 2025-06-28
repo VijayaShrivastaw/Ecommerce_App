@@ -19,6 +19,7 @@ import {
 import HeartSvg from '../svg/HeartSvg';
 import HeartFillSvg from '../svg/HeartFillSvg';
 import { addFavorite, removeFavorite } from '../redux/favoritesSlice';
+import { useNavigation } from '@react-navigation/native';
 
 const data = [
   { id: 1, type: 'All' },
@@ -49,6 +50,7 @@ export default function HomeScreen() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigation = useNavigation()
 
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorites.items);
@@ -164,8 +166,10 @@ export default function HomeScreen() {
           const isFavorite = Boolean(favorites[item.id]);
 
           return (
-            <View style={styles.card}>
-              <TouchableOpacity
+            <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('ProductDetail', { product: item })}
+        >              <TouchableOpacity
                 style={styles.favoriteIcon}
                 onPress={() => toggleFavorite(item)}
               >
@@ -177,7 +181,7 @@ export default function HomeScreen() {
                 {item.title}
               </Text>
               <Text style={styles.price}>${item.price}</Text>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />

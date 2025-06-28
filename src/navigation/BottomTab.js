@@ -1,60 +1,58 @@
-// App.js or Navigation.js
 import React from 'react';
-import { View, Text } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { NavigationContainer } from '@react-navigation/native';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
+
+// Screens
 import HomeScreen from '../screens/HomeScreen';
 import BrowseScreen from '../screens/BrowseScreen';
 import FavouritesScreen from '../screens/FavouritesScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { responsiveHeight } from 'react-native-responsive-dimensions';
 import CartScreen from '../screens/CartScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
+// Custom SVG icons
+import HomeSvg from '../svg/HomeSvg';
+import SearchSvg from '../svg/SearchSvg';
+import FavSvg from '../svg/FavSvg';
+import AddToCartSvg from '../svg/AddToCartSvg';
+import ProfileSvg from '../svg/ProfileSvg';
 
 const Tab = createBottomTabNavigator();
 
 export default function BottomTab() {
   return (
-    <Tab.Navigator
-  screenOptions={({ route }) => ({
-    headerShown: false,
-    tabBarIcon: ({ focused, color, size }) => {
-      let iconName;
-
-      switch (route.name) {
-        case 'Home':
-          iconName = focused ? 'home' : 'home-outline';
-          break;
-        case 'Browse':
-          iconName = focused ? 'search' : 'search-outline';
-          break;
-        case 'Favourites':
-          iconName = focused ? 'heart' : 'heart-outline';
-          break;
-        case 'Cart':
-          iconName = focused ? 'cart' : 'cart-outline';
-          break;
-        case 'Profile':
-          iconName = focused ? 'person' : 'person-outline';
-          break;
-      }
-
-      return <Icon name={iconName} size={size} color={color} />;
-    },
-    tabBarActiveTintColor: '#007AFF',
-    tabBarInactiveTintColor: 'gray',
-    tabBarStyle: {
-      height: responsiveHeight(10), // ✅ change this value as needed
-      paddingBottom: 10, // optional: space for icon/text
-      paddingTop: 10, // optional: space for icons to center vertically
-    },
-    tabBarLabelStyle: {
-      fontSize: 12,
-    },
-  })}
->
-
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          headerShown: false,
+          tabBarIcon: ({ focused, color, size }) => {
+            // Use SVGs directly for each route
+            switch (route.name) {
+              case 'Home':
+                return <HomeSvg width={size} height={size} fill={color} />;
+              case 'Browse':
+                return <SearchSvg width={size} height={size} fill={color} />;
+              case 'Favourites':
+                return <FavSvg width={size}  fill={color} />;
+              case 'Cart':
+                return <AddToCartSvg width={size} height={size} fill={color} />;
+              case 'Profile':
+                return <ProfileSvg width={size} height={size} fill={color} />;
+              default:
+                return null;
+            }
+          },
+          tabBarActiveTintColor: '#007AFF',
+          tabBarInactiveTintColor: 'gray',
+          tabBarStyle: {
+            height: responsiveHeight(10),
+            paddingBottom: 10,
+            paddingTop: 10,
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
+        })}
+      >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Browse" component={BrowseScreen} />
         <Tab.Screen name="Favourites" component={FavouritesScreen} />

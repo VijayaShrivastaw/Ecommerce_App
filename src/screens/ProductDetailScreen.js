@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import HeartSvg from '../svg/HeartSvg';
 import HeartFillSvg from '../svg/HeartFillSvg';
 import AddToCartSvg from '../svg/AddToCartSvg';
 import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
 import { useDispatch, useSelector } from 'react-redux';
 import { addFavorite, removeFavorite } from '../redux/favoritesSlice';
+import { addToCart } from '../redux/cartSlice';
 
 export default function ProductDetailScreen({ route }) {
+  
   const { product } = route.params;
-  const [isFavorite, setIsFavorite] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
   const dispatch = useDispatch();
   const favorites = useSelector((state) => state.favorites.items);
+  const cartItems = useSelector((state) => state.cart.items); // <-- access cart items
+
+  console.log(favorites,'favorites')
   const toggleFavorite = (product) => {
       if (favorites[product.id]) {
         dispatch(removeFavorite(product.id));
@@ -19,6 +24,15 @@ export default function ProductDetailScreen({ route }) {
         dispatch(addFavorite(product));
       }
     };
+    const isFavorite = Boolean(favorites[product.id]);
+    const handleAddToCart = (item) => {
+      if (cartItems[item.id]) {
+        Alert.alert('Already in Cart', 'This product is already in your cart.');
+      } else {
+        dispatch(addToCart(item));
+      }
+    };
+    
   return (
     <View style={styles.container}>
     <View>
@@ -30,11 +44,16 @@ export default function ProductDetailScreen({ route }) {
      }}>
      <TouchableOpacity
         style={styles.favoriteIcon}
-        onPress={() => setIsFavorite(!isFavorite)}
+        // onPress={() => setIsFavorite(!isFavorite)}
+        onPress={() => toggleFavorite(product)}
+
       >
-        {isFavorite ? <HeartFillSvg  /> : <HeartSvg />}
+                {isFavorite ? <HeartFillSvg /> : <HeartSvg />}
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleAddToCart(product)}>
+
       <AddToCartSvg />
+      </TouchableOpacity>
      </View>
     </View>
       <Text style={styles.title}>{product.title}</Text>
